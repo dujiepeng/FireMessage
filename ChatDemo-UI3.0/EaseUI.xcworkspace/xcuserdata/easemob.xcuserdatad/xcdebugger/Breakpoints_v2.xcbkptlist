@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../EaseUI/EaseUI/EMUIKit/ViewController/EaseMessageViewController.m"
-            timestampString = "474292874.190763"
+            timestampString = "474295700.017187"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1695"
-            endingLineNumber = "1695"
+            startingLineNumber = "1708"
+            endingLineNumber = "1708"
             landmarkName = "-sendTextMessage:withExt:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../EaseUI/EaseUI/EMUIKit/ViewController/EaseMessageViewController.m"
-            timestampString = "474292874.190763"
+            timestampString = "474295700.017187"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1270"
-            endingLineNumber = "1270"
+            startingLineNumber = "1313"
+            endingLineNumber = "1313"
             landmarkName = "-didReceiveMessage:"
             landmarkType = "5">
          </BreakpointContent>
