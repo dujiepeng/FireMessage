@@ -512,7 +512,7 @@
             for (EMMessage *message in unreadMessages)
             {
                 [[EaseMob sharedInstance].chatManager sendReadAckForMessage:message];
-                [weakSelf.conversation removeMessage:message];
+//                [weakSelf.conversation removeMessage:message];
             }
             for (id obj in weakSelf.dataArray) {
                 if (![obj isKindOfClass:[NSString class]]) {
@@ -520,21 +520,11 @@
                     if ([model.message.ext valueForKey:@"isFire"]) {
                         NSUInteger index = [weakSelf.dataArray indexOfObject:model];
                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                        if (index && index > 0) {
-                            [weakSelf.conversation removeMessage:model.message];
-                            [weakSelf.messsagesSource removeObject:model.message];
-                            
-                        //判断
-                            if (indexPath.row - 1 >= 0) {
-                                id nextMsg = nil;
-                                id prevMsg = [weakSelf.dataArray objectAtIndex:(indexPath.row - 1)];
-                                if (indexPath.row + 1 < [weakSelf.dataArray count]) {
-                                    nextMsg = [weakSelf.dataArray objectAtIndex:(indexPath.row + 1)];
-                                }
-                                
-                            }
-                        }
-                        
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [weakSelf deleteMessage:indexPath];
+
+                        });
+                    
                     }
                 }
             }
@@ -1544,6 +1534,36 @@
     self.menuIndexPath = nil;
 }
 
+- (void)deleteMessage:(NSIndexPath *)indexPath
+{
+    if (indexPath && indexPath.row > 0) {
+        id<IMessageModel> model = [self.dataArray objectAtIndex:indexPath.row];
+        NSMutableIndexSet *indexs = [NSMutableIndexSet indexSetWithIndex:indexPath.row];
+        NSMutableArray *indexPaths = [NSMutableArray arrayWithObjects:indexPath, nil];
+        
+        [self.conversation removeMessage:model.message];
+        [self.messsagesSource removeObject:model.message];
+        
+        if (indexPath.row - 1 >= 0) {
+            id nextMessage = nil;
+            id prevMessage = [self.dataArray objectAtIndex:(indexPath.row - 1)];
+            if (indexPath.row + 1 < [self.dataArray count]) {
+                nextMessage = [self.dataArray objectAtIndex:(indexPath.row + 1)];
+            }
+            if ((!nextMessage || [nextMessage isKindOfClass:[NSString class]]) && [prevMessage isKindOfClass:[NSString class]]) {
+                [indexs addIndex:indexPath.row - 1];
+                [indexPaths addObject:[NSIndexPath indexPathForRow:(indexPath.row - 1) inSection:0]];
+            }
+        }
+
+            [self.dataArray removeObjectsAtIndexes:indexs];
+            [self.tableView beginUpdates];
+            [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView endUpdates];
+
+    }
+
+}
 - (void)deleteMenuAction:(id)sender
 {
     if (self.menuIndexPath && self.menuIndexPath.row > 0) {
