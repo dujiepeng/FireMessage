@@ -1633,7 +1633,13 @@
 
 - (void)sendTextMessage:(NSString *)text
 {
-    [self sendTextMessage:text withExt:nil];
+    NSDictionary *ext = [NSDictionary dictionary];
+    if (self.isFire) {
+        ext = @{@"isFire":@YES};
+    }else {
+        ext = nil;
+    }
+    [self sendTextMessage:text withExt:ext];
 }
 
 - (void)sendTextMessage:(NSString *)text withExt:(NSDictionary*)ext
