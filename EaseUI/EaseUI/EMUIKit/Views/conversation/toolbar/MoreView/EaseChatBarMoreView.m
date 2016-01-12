@@ -347,13 +347,17 @@
 - (void)fireMessageAction:(UIButton *)sender {
     if (sender.currentTitle && [sender.currentTitle isEqualToString:@"阅后即焚"]) {
         [sender setTitle:@"取消" forState:UIControlStateNormal];
+        if (_delegate && [_delegate respondsToSelector:@selector(moreViewFireMessageAction:)]) {
+            [_delegate moreViewFireMessageAction:self];
+        }
     }else {
         [sender setTitle:@"阅后即焚" forState:UIControlStateNormal];
+        if (_delegate && [_delegate respondsToSelector:@selector(moreViewFireMessageCanceled:)]) {
+            [_delegate moreViewFireMessageCanceled:self];
+        }
     }
-    
-    if (_delegate && [_delegate respondsToSelector:@selector(moreViewFireMessageAction:)]) {
-        [_delegate moreViewFireMessageAction:self];
-    }
+
+
 }
 
 @end

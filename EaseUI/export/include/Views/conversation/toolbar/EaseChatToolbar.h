@@ -96,6 +96,8 @@
  */
 - (void)cancelTouchRecord;
 
+- (void)changeToFireStyle:(BOOL)isFire;
+
 @end
 
 @protocol EMChatToolbarDelegate <NSObject>

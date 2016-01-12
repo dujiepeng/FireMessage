@@ -507,11 +507,39 @@
     
     if ([unreadMessages count])
     {
+        __weak EaseMessageViewController *weakSelf = self;
         dispatch_async(_messageQueue, ^{
             for (EMMessage *message in unreadMessages)
             {
                 [[EaseMob sharedInstance].chatManager sendReadAckForMessage:message];
+                [weakSelf.conversation removeMessage:message];
             }
+            for (id obj in weakSelf.dataArray) {
+                if (![obj isKindOfClass:[NSString class]]) {
+                    id<IMessageModel>model = obj;
+                    if ([model.message.ext valueForKey:@"isFire"]) {
+                        NSUInteger index = [weakSelf.dataArray indexOfObject:model];
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+                        if (index && index > 0) {
+                            [weakSelf.conversation removeMessage:model.message];
+                            [weakSelf.messsagesSource removeObject:model.message];
+                            
+                        //判断
+                            if (indexPath.row - 1 >= 0) {
+                                id nextMsg = nil;
+                                id prevMsg = [weakSelf.dataArray objectAtIndex:(indexPath.row - 1)];
+                                if (indexPath.row + 1 < [weakSelf.dataArray count]) {
+                                    nextMsg = [weakSelf.dataArray objectAtIndex:(indexPath.row + 1)];
+                                }
+                                
+                            }
+                        }
+                        
+                    }
+                }
+            }
+            
+            
         });
     }
 }
@@ -1733,9 +1761,14 @@
 #pragma mark - fireMessageAction
 
 - (void)moreViewFireMessageAction:(EaseChatBarMoreView *)moreView {
-    self.isFire = !self.isFire;
+    self.isFire = YES;
+    [(EaseChatToolbar *)self.chatToolbar changeToFireStyle:YES];
 
-    [(EaseChatToolbar *)self.chatToolbar changeToFireStyle:self.isFire];
+}
+
+- (void)moreViewFireMessageCanceled:(EaseChatBarMoreView *)moreView {
+    self.isFire = NO;
+    [(EaseChatToolbar *)self.chatToolbar changeToFireStyle:NO];
 }
 
 #pragma mark - notifycation

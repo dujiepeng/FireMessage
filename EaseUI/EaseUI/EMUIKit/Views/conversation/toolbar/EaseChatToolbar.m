@@ -199,6 +199,7 @@
 - (void)changeToFireStyle:(BOOL)isFire {
     if (isFire) {
         self.inputTextView.layer.borderColor = [UIColor redColor].CGColor;
+        
     }else {
         self.inputTextView.layer.borderColor = [UIColor colorWithWhite:0.8f alpha:1.0f].CGColor;
     }
